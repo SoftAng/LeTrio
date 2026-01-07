@@ -171,17 +171,38 @@ public class Partie {
             return null;
         }
 
-        Carte carte;
+        // Chercher la plus petite / plus grande carte encore cachée
+        Carte carteChoisie = null;
+
         if (plusPetit) {
-            carte = main.get(0);
+            // parcourir depuis le début jusqu'à trouver une carte non visible
+            for (Carte c : main) {
+                if (!c.isVisible()) {
+                    carteChoisie = c;
+                    break;
+                }
+            }
         } else {
-            carte = main.get(main.size() - 1);
+            // parcourir depuis la fin jusqu'à trouver une carte non visible
+            for (int i = main.size() - 1; i >= 0; i--) {
+                Carte c = main.get(i);
+                if (!c.isVisible()) {
+                    carteChoisie = c;
+                    break;
+                }
+            }
         }
 
-        carte.setVisible(true);
-        ajouterCarteRevelee(carte);
-        return carte;
+        if (carteChoisie == null) {
+            // toutes les cartes de cette main sont déjà révélées ce tour
+            return null;
+        }
+
+        carteChoisie.setVisible(true);
+        ajouterCarteRevelee(carteChoisie);
+        return carteChoisie;
     }
+
 
     private void ajouterCarteRevelee(Carte carte) {
         cartesReveleesDansTour.add(carte);
@@ -227,12 +248,19 @@ public class Partie {
 
         // Retirer les cartes du centre et des mains
         for (Carte carte : cartesReveleesDansTour) {
+            // au centre
             cartesCentre.remove(carte);
+            // dans les mains
             for (Joueur j : joueurs) {
-                j.retirerCarte(carte);
+                boolean retire = j.retirerCarte(carte);
+                if (retire) {
+                    System.out.println("Carte " + carte.getNumero()
+                            + " retirée de la main de " + j.getNom());
+                }
             }
         }
     }
+
 
     private void remettreCartesReveleesFaceCachee() {
         for (Carte carte : cartesReveleesDansTour) {

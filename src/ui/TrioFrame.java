@@ -47,6 +47,12 @@ public class TrioFrame extends JFrame {
         lstCentre.setBorder(BorderFactory.createTitledBorder("Cartes au centre"));
         txtLog.setBorder(BorderFactory.createTitledBorder("Journal"));
 
+        // taille fixe pour le log
+        txtLog.setRows(6);
+        txtLog.setColumns(40);
+        JScrollPane scrollLog = new JScrollPane(txtLog);
+        scrollLog.setPreferredSize(new Dimension(800, 130));
+
         // Remplir la combo cible
         comboCible.addItem("Centre");
         for (Joueur j : partie.getJoueurs()) {
@@ -73,7 +79,7 @@ public class TrioFrame extends JFrame {
         // Bas : boutons + log
         JPanel panelBottom = new JPanel(new BorderLayout());
         panelBottom.add(panelButtons, BorderLayout.NORTH);
-        panelBottom.add(new JScrollPane(txtLog), BorderLayout.CENTER);
+        panelBottom.add(scrollLog, BorderLayout.CENTER);
 
         getContentPane().setLayout(new BorderLayout());
         getContentPane().add(panelTop, BorderLayout.NORTH);
@@ -254,4 +260,3 @@ public class TrioFrame extends JFrame {
         }
     }
 }
-
